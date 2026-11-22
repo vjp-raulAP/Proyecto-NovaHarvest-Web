@@ -5,6 +5,9 @@ var app = builder.Build();
 
 app.MapStaticAssets();
 
+// Configuro la localización española.
+app.UseRequestLocalization("es-ES");
+
 app.MapRazorPages();
 
 
