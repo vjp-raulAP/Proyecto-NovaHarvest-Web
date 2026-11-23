@@ -33,7 +33,7 @@
 
 <p>Estado: @Model.EstadoExcedente</p>
 
-<p>Nota del productor: @(Model.Excedente.Note ?? "Sin observaciones")</p>
+<p>Nota del productor: @Html.Raw(Model.Excedente.Note ?? "Sin observaciones")</p>
 
 @* boton aparece deshabilitado cuando el producto está agotado*@
 <button disabled="@(!Model.PuedeReservar)">Reservar</button>

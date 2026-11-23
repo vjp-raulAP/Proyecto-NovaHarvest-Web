@@ -1,12 +1,8 @@
 @page "/ticket"
+@model TicketModel
 @{
     Layout = null;
 
-    string reserva = "RES-0001";
-    string producto = "Cereza Picota";
-    int kilos = 20;
-    string recogida = "Cooperativa del Valle del Jerte";
-    DateTime fechaGeneracion=DateTime.Now;
 }
 
 <!DOCTYPE html>
@@ -19,11 +15,13 @@
         </head>
 
         <body>
-            <h1> Justificante de reserva</h1>
-                <p>Reserva: @reserva</p>
-                <p>Producto: @producto</p>
-                <p>Kilos: @kilos</p>
-                <p>Recogida: @recogida</p>
-                <p>Generado el @fechaGeneracion.ToString("dd/MM/yyyy HH:mm") (fecha y hora del servidor)</p>
+            <main>
+                <h1>Justificante de Reserva</h1>
+                <p>Reserva: @Model.ReservationsCode</p>
+                <p>Producto: @Model.Product</p>
+                <p>Kilos: @Model.Kilos</p>
+                <p>Recogida: @Model.HarvestPlace </p>
+                <p>Generado el @Model.GenerateDay.ToString("dd/MM/yyyy HH:mm") (fecha y hora del servidor)</p>
+            </main>    
         </body>
     </html>
