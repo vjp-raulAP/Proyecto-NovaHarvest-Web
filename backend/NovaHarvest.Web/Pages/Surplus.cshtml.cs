@@ -22,7 +22,7 @@ private const int LowStockKg = 50;
         AvailableKg = 343,
         ReservedKg = 120,
         PricePerKg = 3.20m,
-        Note = "<b>Recoger antes de las 14:00</b>"  
+        Note = "<b>Recoger antes de las 14:00</b>"
     };
     public int KilosDisponibles { get; set; }
 
@@ -75,7 +75,7 @@ private const int LowStockKg = 50;
                 }
             else if (KilosDisponibles <= LowStockKg)
                 {
-                    EstadoExcedente = "¡Quedan pocos kilos!";
+                    EstadoExcedente = "¡Ultimos kilos!";
                 }
             else
                 {
