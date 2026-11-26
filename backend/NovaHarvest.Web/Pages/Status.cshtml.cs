@@ -13,10 +13,10 @@ public class StatusModel : PageModel
 
     public void OnGet()
     {
-        ServerTime = DateTime.Now;
-        ServerName = Environment.MachineName;
+       ServerTime = DateTime.Now;
+      ServerName = Environment.MachineName;
 
         SiteStats.Visits++;
-        Visits = SiteStats.Visits;
+      Visits = SiteStats.Visits;
     }
 }

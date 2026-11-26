@@ -260,5 +260,114 @@ Cuando el valor de la expresión es null, Razor no muestra el atributo `class="u
  
 
 ### 7. Tipos y operadores.
- Haz una tabla con cada dato que calcula SurplusModel: su tipo de C#, los operadores que usa y por qué ese tipo. ¿Por qué RemainingKg / BoxKg da cajas completas? ¿Qué pasaría si los kilos fueran decimal? ¿Qué escribe Razor si muestras directamente un bool? ¿Y un null?
+ Haz una tabla con cada dato que calcula SurplusModel: su tipo de C#, los operadores que usa y por qué ese tipo. ¿Qué pasaría si los kilos fueran decimal? ¿Qué escribe Razor si muestras directamente un bool? ¿Y un null?
 
+### Tipos de datos y operadores de SurplusModel
+
+| **Dato que calcula** | **Tipo de C#** | **Operadores que usa** | **por qué ese tipo** |
+|---|---|---|---|
+| `Status` | `string` | `==`, `<`, `?:` | Guarda un mensaje de texto que indica la situación actual del excedente. |
+| `RemainingKg` | `int` | `-` | Almacena los kilos que todavía están disponibles sin utilizar decimales. |
+| `IsUrgent` | `bool` | `<=`, `&&`, `>` | Devuelve verdadero o falso según si el producto está próximo a caducar y quedan kilos. |
+| `DiscountedPricePerKg` | `decimal` | `*`, `-` | Permite obtener el precio con descuento manteniendo los valores decimales. |
+| `FullBoxes` | `int` | `/` | Indica cuántas cajas se pueden completar con los kilos disponibles. |
+| `ConsumeBefore` | `DateTime` | `AddDays()` | Permite almacenar una fecha concreta que marca el límite para consumir el producto. |
+| `IsOutOfStock` | `bool` | `==` | Sirve para comprobar si ya no queda ningún kilo disponible. |
+| `LooseKg` | `int` | `%` | Guarda los kilos que quedan después de preparar todas las cajas completas. |
+| `TotalValue` | `decimal` | `*` | Se utiliza para calcular el importe total del excedente con precisión decimal. |
+| `DaysToConsume` | `int` | `-`, `.Days` | Representa el número de días que faltan hasta la fecha límite de consumo. |
+
+**¿Por qué RemainingKg / BoxKg da cajas completas?** 
+
+Porque los dos valores son de tipo `int`. En C#, cuando dividimos dos números enteros, el resultado también es entero y se eliminan los decimales.
+
+Por ejemplo, si tenemos 43 kilos y cada caja contiene 5:
+
+```csharp
+43 / 5 = 8
+```
+
+El resultado es 8 cajas completas.
+
+**¿Qué pasaría si los kilos fueran de tipo `decimal`?**
+
+La división podría devolver un resultado con decimales. Por ejemplo:
+
+```csharp
+43m / 5m = 8.6m
+```
+
+Esto indicaría 8,6 cajas, pero no podemos preparar una caja incompleta si queremos contar únicamente las cajas completas. Para conseguirlo tendríamos que redondear hacia abajo o utilizar una conversión a entero.
+
+### 8. Cultura.
+ Quita UseRequestLocalization("es-ES") (y vuelve a ponerlo al terminar). Copia lo que muestran los precios de /surplus y la fecha de / con Docker y con dotnet run. Explica las diferencias y por qué esa línea las elimina.
+
+ UseRequestLocalization("es-ES") es la localización que lo he usado para que al generar las páginas nos ponga la moneda del pais y el dia en el idioma al que hemos especificado. está en `Program.cs`
+
+![pregunta 8](img/cap34.png)
+
+Si ejecuto con `Docker compose up -d --build`, la fecha aparecerá en inglés y los precios en vez de aparecer con la moneda de € . Aparecerá con un simbolo.
+
+![pregunta 8](img/cap35.png)
+
+![pregunta 8](img/cap36.png)
+
+
+Si ejecuto con `Dotnet run`, los precios aparecen en € y la fecha en español.
+
+
+![pregunta 8](img/cap37.png)
+
+![pregunta 8](img/cap38.png)
+
+Con `dotnet run`: la aplicación se ejecuta directamente en Windows y normalmente utiliza la configuración regional del sistema operativo.
+
+Con `Docker`: la aplicación se ejecuta dentro de un contenedor Linux, que puede tener otra configuración regional.
+
+### 9. Ámbito.
+ Cambia temporalmente el contador de /status por una variable local en un @{ } de la página y recarga varias veces: ¿qué ves y por qué? Con SiteStats, 
+
+Para desarrollar el ejemplo. voy a poner el contador a 0 como lo hicimos en el proyecto de clase en /Status.cshtml debajo del ViwData. y en `visitas desde arranque`voy a indicarle que coja `@Visist`.Esa variable la he creado dentro de `@{ }`de manera local y el layout no puede acceder a dicha varible. de tal manera que al recargar la pagina varias veces la hora cambia pero el el número de visitas siempre se que da a 1.Lariable empieza en 0 y al pasar por ella incrementa una vez el contador. Al volver a cargar la página, vuelve el contador a empezar desde 0
+
+
+![pregunta 9](img/cap39.png)
+
+![pregunta 9](img/cap40.png)
+
+Para que el contador funcione como es debido al recargar la página. Necesitamos crear `/model/SiteStats.cs`. Donde nos creamos la clase Visits. 
+
+
+![pregunta 9](img/cap41.png)
+
+¿qué ve otro navegador, y qué pasa tras docker compose restart backend?
+si ejecutas `docker compose restart`se reinicia el contador ya que se reinicia el contenedor  y la variable se vuelve a poner a 0 debido a que es una variable estática.
+
+ ¿Por qué el layout no puede leer una variable declarada en Status.cshtml, y cómo le llega entonces el título?
+
+ Tanto `_Layout.cshtml` como `Status.cshtml` son diferentes páginas . si declaro de modo local una variable en `Status.cshtml` en @ { } . En `_Layout.cshtml`no va a poder acceder.
+
+
+### 10. PageModel.
+ ¿Qué has puesto en SurplusModel y qué en Surplus.cshtml, y por qué? 
+ En `SurplusModel.cshtml.cs`. He puesto el archivo c# donde contiene la lógica de la página de `Excedentes` que voy a utilizar en `Surplus.chtml`. Declaro las clase y las constantes que voy a usar e incluso el `OnGet()` donde se ejecuta los calculo cunado accedo a la página. 
+
+ En  `SuperplusModel.cshtml` tengo el HTML donde cogerá los cáculos de `SuperplusModel.cshtml.cs`y el `_Layout.cshtml`y crearan la página que visualizará el usuario.
+
+ [pregunta 10](img/cap42.png)
+ 
+ Cita un cálculo concreto. Si cargas /surplus tres veces, ¿cuántos objetos SurplusModel se crean y cuánto vive cada uno? 
+ Si cargo `/Surplus`tres veces , se crean 3 objetos `SurplusModel`. Se genera uno por cada petición. Cada objeto vive durante le tiempo que dura el procesamiento de la petición. 
+ Si tomamos como  ejemplo 
+ ```
+    KilosDisponibles = Excedente.AvailableKg - Excedente.ReservedKg;
+ 
+ ```
+ En cada petición se realiza un cáculo de forma independiente. y con los datos que tiene en esas variables se hace el cálculo.
+
+ 343-120 = 223 kg disponible
+
+ 
+ ¿Y el contador de SiteStats?
+ El contador SiteStats.Visits funciona de forma diferente a SurplusModel. Si cargas /surplus 3 veces . se crean 3 objetos SurplusModel. pero el contador no se reinicia en cada petición por que es una propiedad `statica`. 
+
+ SiteStats.Visits: es compartido por todas las peticiones y conserva su valor mientras el proceso de la aplicación siga activo.
