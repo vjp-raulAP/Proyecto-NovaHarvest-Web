@@ -19,6 +19,8 @@
 
  <p>Precio con descuento: @Model.PrecioExcedente.ToString("C")</p>
 
+ <p>Prueba pregunta4: @(Model.Excedente.PricePerKg * 0.7m)</p>
+
  <p class="@(Model.EsUrgente ? "urgent" : null)">Días para consumirlo: @Model.DiasParaConsumir</p>
 
  <p>Precio original: @Model.Excedente.PricePerKg.ToString("C") / kg</p>
@@ -32,6 +34,8 @@
 <p> Valor del excedente: @Model.ValorExcedente.ToString("C") </p>
 
 <p>Estado: @Model.EstadoExcedente</p>
+
+<p>Nota del productor: @(Model.Excedente.Note ?? "Sin observaciones")</p>
 
 <p>Nota del productor: @Html.Raw(Model.Excedente.Note ?? "Sin observaciones")</p>
 
